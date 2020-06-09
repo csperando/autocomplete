@@ -7,9 +7,8 @@ $(document).ready(function(){
   // arrow key navigation for 40 and 38
   // enter key for 13
   // else update query for autocomplete list
-  $("#searchBox").keydown(function(e){
+  $("#searchBox").keyup(function(e){
     if (e.keyCode === 40) {
-      e.preventDefault();
       if(currentFocus == maxIndex){
         //console.log(currentFocus);
       }
@@ -23,7 +22,6 @@ $(document).ready(function(){
       return;
     }
     else if (e.keyCode === 38) {
-      e.preventDefault();
       //console.log('up arrow');
       if (currentFocus <= 1) {
         // cannot go further up list
@@ -37,22 +35,38 @@ $(document).ready(function(){
     }
     else if (e.keyCode === 13) {
       e.preventDefault();
-      $("#searchBox").val($("#"+currentFocus).text().trim());
+      if(currentFocus != 0) {
+        $("#searchBox").val($("#"+currentFocus).text().trim());
+      }
       $("#autocompleteForm").submit();
     }
-    /*
+/*
     else if(e.keyCode === 8 || e.keyCode === 46) {
       // backspace or delete
     }
-    */
+*/
     else {
       //console.log(e.keyCode);
       getRequest($("#searchBox").val());
     }
   });
 
+  // Prevent cursor position from moving to start of textbox on up-arrow
+  $("#searchBox").keydown(function(e){
+    if(e.keyCode === 38) {
+      e.preventDefault();
+    }
+  })
+
   $("#button").click(function(){
     $("#autocompleteForm").submit();
+  });
+
+
+  // hide dropdown when user clicks elsewhere on page
+  $("body").click(function(e){
+    $("#outputDiv").css("display","none");
+    currentFocus = 0;
   })
 
 });
